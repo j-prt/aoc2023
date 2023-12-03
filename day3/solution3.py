@@ -27,11 +27,17 @@ class Line:
     nums: list[Part] = field(default_factory=list)
     symbols: list[Part] = field(default_factory=list)
 
+    # Added this while working on part 2
+    def __add__(self, other):
+        sum_num = self.nums + other.nums
+        sum_symbols = self.symbols + other.symbols
+        return self.__class__(sum_num, sum_symbols)
+
 
 # Functions for parsing and scoring
 
 def build_part(match):
-    loc = frozenset(range(match.start()-1, match.end()))
+    loc = frozenset(range(match.start(), match.end()+1))
     val = match.group()
     return Part(loc=loc, val=val)
 
@@ -90,3 +96,65 @@ def solve_part_1():
     print(total)
 
 # solve_part_1()
+
+
+# Puzzle 2
+from operator import mul
+from functools import reduce
+
+def score_gears(left, center, right):
+    triplet = left + center + right
+    sub_total = 0
+    for part in center.symbols:
+        if part.val == '*':
+            neighbors = [part.loc.intersection(n.loc) for n in triplet.nums]
+            neighbors = []
+            for num in triplet.nums:
+                if num.loc.intersection(part.loc):
+                    neighbors.append(int(num.val))
+            if len(neighbors) > 1:
+                sub_total += reduce(mul, neighbors)
+
+    return sub_total
+
+def test():
+    total = 0
+    gear_list = set()
+    inputs = example.split()
+    prev_one = parse_line(inputs[0])
+    prev_two = Line()
+    for line in inputs[1:]:
+        current = parse_line(line)
+
+        total += score_gears(gear_list, prev_two, prev_one, current)
+        # Prep for the next loop
+        prev_two = prev_one
+        prev_one = current
+
+    current = Line()
+    total += score_gears(gear_list, prev_two, prev_one, current)
+
+    print(total)
+
+# test()
+
+def solve_part_2():
+    with open('input3.txt', 'r', encoding='utf-8') as f:
+        inputs = f.readlines()
+
+    total = 0
+    prev_one = parse_line(inputs[0])
+    prev_two = Line()
+    for line in inputs[1:]:
+        current = parse_line(line)
+        total += score_gears(prev_two, prev_one, current)
+        # Prep for the next loop
+        prev_two = prev_one
+        prev_one = current
+
+    current = Line()
+    total += score_gears(prev_two, prev_one, current)
+
+    print(total)
+
+solve_part_2()
