@@ -29,15 +29,15 @@ class Line:
 
     # Added this while working on part 2
     def __add__(self, other):
-        sum_num = self.nums + other.nums
+        sum_nums = self.nums + other.nums
         sum_symbols = self.symbols + other.symbols
-        return self.__class__(sum_num, sum_symbols)
+        return self.__class__(sum_nums, sum_symbols)
 
 
 # Functions for parsing and scoring
 
 def build_part(match):
-    loc = frozenset(range(match.start(), match.end()+1))
+    loc = frozenset(range(match.start(), match.end()+1)) # Catch diagonals
     val = match.group()
     return Part(loc=loc, val=val)
 
