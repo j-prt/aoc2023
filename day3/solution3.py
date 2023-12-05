@@ -107,7 +107,6 @@ def score_gears(left, center, right):
     sub_total = 0
     for part in center.symbols:
         if part.val == '*':
-            neighbors = [part.loc.intersection(n.loc) for n in triplet.nums]
             neighbors = []
             for num in triplet.nums:
                 if num.loc.intersection(part.loc):
@@ -119,20 +118,19 @@ def score_gears(left, center, right):
 
 def test():
     total = 0
-    gear_list = set()
     inputs = example.split()
     prev_one = parse_line(inputs[0])
     prev_two = Line()
     for line in inputs[1:]:
         current = parse_line(line)
 
-        total += score_gears(gear_list, prev_two, prev_one, current)
+        total += score_gears(prev_two, prev_one, current)
         # Prep for the next loop
         prev_two = prev_one
         prev_one = current
 
     current = Line()
-    total += score_gears(gear_list, prev_two, prev_one, current)
+    total += score_gears(prev_two, prev_one, current)
 
     print(total)
 
