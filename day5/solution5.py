@@ -25,7 +25,7 @@ def map_resolver(seed, mapping):
         if map_[1] <= seed < map_[1] + map_[2]:
             diff = map_[0] - map_[1]
             return seed + diff
-    # If the seed falls outside the range, return itself
+    # If the seed falls outside the range, return it
     return seed
 
 def solve(inputs):
