@@ -56,3 +56,42 @@ solve(inputs)
 
 
 # Puzzle 2
+
+def parse_inputs_2(raw_inputs):
+    times = raw_inputs.split('\n')[0].split(':')[1].split()
+    distances = raw_inputs.split('\n')[1].split(':')[1].split()
+
+    return int(''.join(times)), int(''.join(distances))
+
+def solve_2(inputs):
+    from math import ceil
+
+    time, distance = parse_inputs_2(inputs)
+
+    # These functions use variables from the enclosing scope
+    def f(t):
+        return t * (time - t)
+
+    def bisect(l, r):
+        if r - l == 1:
+            return r
+        mid = (l+r) // 2
+        diff =  f(mid) - distance
+        if diff > 0:
+            return bisect(l, mid)
+        else:
+            return bisect(mid, r)
+
+    # Find the min and get the answer
+    min_ = bisect(0, time//2)
+    ways = 2 * (ceil(time / 2) - min_)
+    if time % 2 == 0:
+        ways += 1
+
+    print(ways)
+
+# Test
+solve_2(example)
+
+# Solve
+solve_2(inputs)
