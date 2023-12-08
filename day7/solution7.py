@@ -68,13 +68,77 @@ def solve(inputs):
     for (_, bid), rank in zip(rounds, range(len(rounds), 0, -1)):
         total += bid * rank
 
-    return total
+    print(total)
 
 # Test
-print(solve(example))
+solve(example)
 
 # Solve
-print(solve(inputs))
+solve(inputs)
 
 
 # Puzzle 2
+
+VALUE_MAP = dict(zip(list('AKQT98765432J'), range(14, 1, -1)))
+
+def pre_score(hand):
+    if five_oak(hand):
+        return 7**7
+    elif four_oak(hand):
+        return 7**6
+    elif full_house(hand):
+        return 7**5
+    elif three_oak(hand):
+        return 7**4
+    elif two_pair(hand):
+        return 7**3
+    elif one_pair(hand):
+        return 7**2
+    else:
+        return 7
+
+def score(hand):
+    if not (j_count := hand.count('J')):
+        points = pre_score(hand)
+    else:
+        j_less = [card for card in hand if card != 'J']
+        no_j = len(set(j_less))
+
+        if j_count >= 4:
+            points = 7**7 # Five of a kind
+        elif j_count == 3:
+            if no_j == 1:
+                points = 7**7 # Five of a kind
+            else:
+                points = 7**6 # Four of a kind
+        elif j_count == 2:
+            if no_j == 1:
+                points = 7**7 # Five of a kind
+            elif no_j == 2:
+                points = 7**6 # Four of a kind
+            else:
+                points = 7**4 # Three of a kind
+        elif j_count == 1:
+            if no_j == 1:
+                points = 7**7 # Five of a kind
+            elif no_j == 2:
+                # This is the ambiguous case. QQAAJ -> no_j 2, j 1. full house!
+                # Alternatively, QQQAJ -> no_j 2, j 1. Four of a kind! what dooo
+                if three_oak(j_less + ['F']):
+                    points = 7**6 # Four of a kind
+                else:
+                    points = 7**5 # Full house
+            elif no_j == 3:
+                points = 7**4 # Three of a kind
+            else:
+                points = 7**2 # One pair
+
+    positions = [14**5, 14**4, 14**3, 14**2, 14]
+    n = sum(map(lambda x: VALUE_MAP[x[1]] * x[0], zip(positions, hand)))
+    return points * n
+
+# Test
+solve(example)
+
+# Solve
+solve(inputs)
