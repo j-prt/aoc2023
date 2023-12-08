@@ -104,33 +104,16 @@ def score(hand):
         j_less = [card for card in hand if card != 'J']
         no_j = len(set(j_less))
 
-        if j_count >= 4:
-            points = 7**7 # Five of a kind
-        elif j_count == 3:
-            if no_j == 1:
+        match j_count, no_j:
+            case _, 1|0:
                 points = 7**7 # Five of a kind
-            else:
+            case 2|3, 2:
                 points = 7**6 # Four of a kind
-        elif j_count == 2:
-            if no_j == 1:
-                points = 7**7 # Five of a kind
-            elif no_j == 2:
-                points = 7**6 # Four of a kind
-            else:
+            case 1|2, 3:
                 points = 7**4 # Three of a kind
-        elif j_count == 1:
-            if no_j == 1:
-                points = 7**7 # Five of a kind
-            elif no_j == 2:
-                # This is the ambiguous case. QQAAJ -> no_j 2, j 1. full house!
-                # Alternatively, QQQAJ -> no_j 2, j 1. Four of a kind! what dooo
-                if three_oak(j_less + ['F']):
-                    points = 7**6 # Four of a kind
-                else:
-                    points = 7**5 # Full house
-            elif no_j == 3:
-                points = 7**4 # Three of a kind
-            else:
+            case 1, 2:
+                points = 7**6 if three_oak(j_less + ['F']) else 7**5 # 4OAK/FH
+            case 1, 4:
                 points = 7**2 # One pair
 
     positions = [14**5, 14**4, 14**3, 14**2, 14]
