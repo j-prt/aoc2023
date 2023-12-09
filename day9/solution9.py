@@ -45,6 +45,7 @@ solve(inputs)
 def solve_2(inputs):
     histories = parse_inputs(inputs)
     total = 0
+
     for hist in histories:
         diffed = [hist]
         while sum(hist) != 0:
