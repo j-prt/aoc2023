@@ -28,7 +28,6 @@ def solve(inputs):
         while sum(hist) != 0:
             hist = diff(hist)
             diffed.append(hist)
-        print(diffed)
         extra = sum(hist[-1] for hist in diffed)
         total += extra
 
