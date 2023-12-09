@@ -46,10 +46,49 @@ def solve(inputs):
 
     print(steps)
 
-
-
 # Test
 solve(example)
 
 # Solve
 solve(inputs)
+
+
+# Puzzle 2
+
+with open('example2.txt') as f:
+    example2 = f.read()
+
+def solve_2(inputs):
+    from itertools import cycle
+    from math import lcm
+
+    instructions, nodes = parse_inputs(inputs)
+    instructions_cycle = cycle(instructions)
+
+    node_dict = {}
+    for node in nodes:
+        node_dict[node[0]] = node[1]
+
+    starting_nodes = [node for node in node_dict.keys() if node.endswith('A')]
+    steps = []
+    for node in starting_nodes:
+        curr_steps = 0
+        curr = node
+        instructions_cycle = cycle(instructions)
+        for LR in instructions_cycle:
+            curr_steps += 1
+            if LR == 'L':
+                curr = node_dict[curr][0]
+            if LR == 'R':
+                curr = node_dict[curr][1]
+            if curr.endswith('Z'):
+                steps.append(curr_steps)
+                break
+
+    print(lcm(*steps))
+
+# Test
+solve_2(example2)
+
+# Solve
+solve_2(inputs)
