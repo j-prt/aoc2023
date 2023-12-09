@@ -28,6 +28,7 @@ def solve(inputs):
         while sum(hist) != 0:
             hist = diff(hist)
             diffed.append(hist)
+        print(diffed)
         extra = sum(hist[-1] for hist in diffed)
         total += extra
 
@@ -38,3 +39,32 @@ solve(example)
 
 # Solve
 solve(inputs)
+
+
+# Puzzle 2
+
+def solve_2(inputs):
+    histories = parse_inputs(inputs)
+    total = 0
+    for hist in histories:
+        diffed = [hist]
+        while sum(hist) != 0:
+            hist = diff(hist)
+            diffed.append(hist)
+
+        extra = 0
+        for idx, hist in enumerate(diffed):
+            if idx % 2 == 0:
+                extra += hist[0]
+            else:
+                extra -= hist[0]
+
+        total += extra
+
+    print(total)
+
+# Test
+solve_2(example)
+
+# Solve
+solve_2(inputs)
