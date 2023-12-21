@@ -52,7 +52,6 @@ def HASHMAP(instr):
     else:
         boxes[box_no].pop(code, None)
 
-
 def solve_2(inputs):
     instructions = parse_inputs(inputs)
 
