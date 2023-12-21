@@ -133,3 +133,63 @@ solve(example)
 
 # Solve
 solve(inputs)
+
+
+# Puzzle 2
+
+# Brute force works here too
+def score(x, y, dir, contraption):
+    beams = [Beam(x=x, y=y, direction=dir)]
+    finished = []
+    while beams:
+        beam = beams.pop()
+
+        while True:
+            try:
+                try:
+                    symbol = contraption[beam.y][beam.x]
+                except:
+                    raise IndexError
+                beam, other = beam.look(symbol)
+                if other:
+                    beams.append(other)
+                beam.step()
+            except IndexError:
+
+                finished.append(beam)
+                break
+
+    locations = set()
+    for beam in finished:
+        hist = [(h[0], h[1]) for h in beam.history]
+        locations.update(hist)
+    Beam.history = set()
+    return len(locations)
+
+def solve_2(inputs):
+    contraption = parse_inputs(inputs)
+    x_limit = len(contraption[0])
+    y_limit = len(contraption)
+    max_val = 0
+
+    # HORIZONTAL
+    for y in range(y_limit):
+        val = max(score(0, y, Compass.EAST, contraption),
+                    score(x_limit-1, y, Compass.WEST, contraption))
+        if val > max_val:
+            max_val = val
+
+    # VERTICAL
+    for x in range(x_limit):
+        val = max(score(x, 0, Compass.SOUTH, contraption),
+                    score(x, y_limit-1, Compass.NORTH, contraption))
+        if val > max_val:
+            max_val = val
+
+    print(max_val)
+
+# Test
+solve_2(example)
+
+# Solve
+solve_2(inputs)
